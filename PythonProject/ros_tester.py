@@ -31,7 +31,7 @@ class ExamplePublisher(Node):
     def __init__(self):
         super().__init__('centralPublisher')
         self.US_publisher=self.create_publisher(Image, 'US_images', 0)
-        timer_period = 1/10.  # seconds
+        timer_period = 1/5.  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.i = 0
 
