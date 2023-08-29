@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Recorder
+namespace Recorder_mrtk
 {
     /// <summary>
     /// Add this component to a GameObject to Record Mic Input 
@@ -37,11 +38,7 @@ namespace Recorder
         /// </summary>
         [Tooltip("Set a keyboard key for saving the Audio File")]
         public KeyCode saveKey,startKey;
-        /// <summary>
-        /// Set a Button to trigger writing the WAV file and Saving the Audio 
-        /// </summary>
-        public Button SaveButton;
-        public Button StartButton;
+
         /// <summary>
         /// What should the saved file name be, the file will be saved in Streaming Assets Directory
         /// </summary>
@@ -51,6 +48,7 @@ namespace Recorder
 
         private RosConnectionExample rosConnection;
         private float startRecordingTime;
+        private ROS2.IPublisher<std_msgs.msg.ByteMultiArray> publisher;
 
         #endregion
 
@@ -58,7 +56,7 @@ namespace Recorder
 
         void Start()
         {
-            rosConnection=GameObject.Find("ROS_center").GetComponent<RosConnectionExample>();
+            publisher = ROS2Listener.instance.node.CreatePublisher<std_msgs.msg.ByteMultiArray>("audio");
             audioSource = GetComponent<AudioSource>();
         }
 
@@ -116,7 +114,10 @@ namespace Recorder
                 WriteWAVFile(audioSource.clip, filePath);
                 //filePath=Path.Combine(Application.streamingAssetsPath,  "1000.wav");
                 byte[] bytes = ConvertWAVtoByteArray(filePath);
-                rosConnection.publishBytes(bytes);
+                std_msgs.msg.ByteMultiArray msg = new std_msgs.msg.ByteMultiArray();
+                msg.Data = bytes.ToList();
+                publisher.Publish(msg);
+                
                 Debug.Log($"File Saved Successfully at {filePath}");
                 audio_index += 1;
             }

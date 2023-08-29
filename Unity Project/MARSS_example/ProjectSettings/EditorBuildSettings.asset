@@ -4,7 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/main_mrtk_ros.unity
+    guid: 65abdf431861c744eb00457b33b90bdc
   m_configObjects:
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: fcd61109a1cef064eb5a52bed8c8b127, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 185b65bd25910964c9990a4e42db0fcc, type: 2}
